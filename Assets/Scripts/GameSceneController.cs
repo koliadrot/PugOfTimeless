@@ -5,25 +5,9 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Cinemachine;
 
-public class GameSceneController : MonoBehaviour
+public class GameSceneController : Singleton<GameSceneController>
 {
     #region Field Declarations
-
-    private static GameSceneController _instance = null;
-    private static readonly object threadlock = new object();
-    public static GameSceneController Instance
-    {
-        get
-        {
-            lock (threadlock)
-            {
-                if (_instance == null)
-                    _instance = new GameSceneController();
-
-                return _instance;
-            }
-        }
-    }
 
     public event Action<int> ScoreUpdateOnEat = (int score) => { };
     public event Action<float> LifeControl = (float life) => { };
@@ -33,22 +17,22 @@ public class GameSceneController : MonoBehaviour
     public event Action GamePlaySubscribe = () => { };
 
     [Header("Food Spawn")]
-    [SerializeField] float xFoodRange = 23f;
-    [SerializeField] float zFoodRange = 23f;
-    [SerializeField] float startFoodDelay = 2;
-    [SerializeField] string foodTag = "Food";
-    [SerializeField] float foodHealth = 0.25f;
+    [SerializeField] private float xFoodRange = 23f;
+    [SerializeField] private float zFoodRange = 23f;
+    [SerializeField] private float startFoodDelay = 2;
+    [SerializeField] private string foodTag = "Food";
+    [SerializeField] private float foodHealth = 0.25f;
     private bool _foodStatus;
 
     [Header("Enemy Spawn")]
-    [SerializeField] float xEnemyRange = 23f;
-    [SerializeField] float zEnemyRange = 23f;
-    [SerializeField] float startEnemyDelay = 2;
-    [SerializeField] float delayRespawn = 1.5f;
-    [SerializeField] string enemyTag = "Enemy";
+    [SerializeField] private float xEnemyRange = 23f;
+    [SerializeField] private float zEnemyRange = 23f;
+    [SerializeField] private float startEnemyDelay = 2;
+    [SerializeField] private float delayRespawn = 1.5f;
+    [SerializeField] private string enemyTag = "Enemy";
 
     [Header("GamePlay")]
-    [SerializeField] CinemachineVirtualCamera cinemachine;
+    [SerializeField] private CinemachineVirtualCamera cinemachine;
     [HideInInspector] public bool replayOn = false;
     [HideInInspector] public float difficulty = 10f;
     public KeyCode replayKey = KeyCode.R;
@@ -66,8 +50,8 @@ public class GameSceneController : MonoBehaviour
     [HideInInspector] public List<Transform> enemiesTransform;
 
     [Header("Audio")]
-    [SerializeField] AudioSource sourceAuxiliary;
-    [SerializeField] AudioSource sourceMainTheme;
+    [SerializeField] private AudioSource sourceAuxiliary;
+    [SerializeField] private AudioSource sourceMainTheme;
 
     public int TotalPoints //Update full total poits and Health Bar
     {
@@ -104,9 +88,9 @@ public class GameSceneController : MonoBehaviour
     #endregion
 
     #region Startup
-    private void Awake()
+    protected override void Awake()
     {
-        _instance = this;
+        base.Awake();
         endGameObservers = new List<IObserverable>();
         DamageControl += CinemachineNoiseDamage;
         ReplayControl += TimeSound;
@@ -294,7 +278,7 @@ public class GameSceneController : MonoBehaviour
     private void PooledSpawnObject(Vector3 spawnPosition, string tag)//Main methods, where routine get necessary prefab and set property for it
     {
         // Get an object object from the pool
-        GameObject pooledObject = ObjectPooler.SharedInstance.GetPooledObject(tag);
+        GameObject pooledObject = ObjectPooler.Instance.GetPooledObject(tag);
         if (pooledObject != null)
         {
             pooledObject.transform.position = spawnPosition;

@@ -10,11 +10,12 @@ public class FoodController : MonoBehaviour, IObserverable
     public event Action<int, Transform, Vector3, AudioSource, AudioClip> FoodEated = (int pointValue, Transform food, Vector3 position, AudioSource sourceAudio, AudioClip clip) => { };
 
     [Header("GamePlay")]
-    [SerializeField] int pointValue = 1;
+    [SerializeField] private int pointValue = 1;
 
     [Header("Audio")]
-    [SerializeField] AudioClip eatClip;
     [HideInInspector] public AudioSource source;
+    [SerializeField] private AudioClip eatClip;
+    
 
     #endregion
 

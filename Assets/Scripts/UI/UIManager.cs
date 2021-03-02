@@ -5,46 +5,52 @@ using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 
-public class HUDController : MonoBehaviour, IObserverable
+public class UIManager : Singleton<UIManager>, IObserverable
 {
     #region Field Declarations
 
+    public event Action<TweenCallback> OnMenuAction = (TweenCallback method) => { };
+
     [Header("Player UI")]
-    [SerializeField] TextMeshProUGUI scoreText;
-    [SerializeField] Image healthBar;
-    [SerializeField] Image timeBar;
-    [SerializeField] Image replayImage;
-    [SerializeField] Image damageImage;
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private Image healthBar;
+    [SerializeField] private Image timeBar;
+    [SerializeField] private Image replayImage;
+    [SerializeField] private Image damageImage;
 
     [Header("Main Game")]
-    [SerializeField] Canvas mainGame;
-    [SerializeField] Button restartButton;
-    [SerializeField] float speedRotation = 5f;
-    [SerializeField] StatusText statusText;
+    [SerializeField] private Canvas mainGame;
+    [SerializeField] private Button restartButton;
+    [SerializeField] private float speedRotation = 5f;
+    [SerializeField] private StatusText statusText;
 
     [Header("Start Menu")]
-    [SerializeField]  Canvas startMenu;
-    [SerializeField]  Button easyButton;
-    [SerializeField]  Button mediumButton;
-    [SerializeField]  Button hardButton;
-    [SerializeField] Button  quitButton;
+    [SerializeField] private Canvas startMenu;
+    [SerializeField] private Button easyButton;
+    [SerializeField] private float easyDifficult = 15f;
+    [SerializeField] private Button mediumButton;
+    [SerializeField] private float mediumDifficult = 10f;
+    [SerializeField] private Button hardButton;
+    [SerializeField] private float hardDifficult = 7f;
+    [SerializeField] private Button quitButton;
 
     private GameSceneController gameSceneController;
+
+
 
     #endregion
 
     #region Startup
-    private void Awake()
-    {
-        SetButtons();
-    }
 
     private void Start()
     {
+
         gameSceneController = GameSceneController.Instance;
         gameSceneController.AddObserver(this);//Subscribe on observer
         SubscribeOnEvents();
+        SetButtons();
     }
 
     #endregion
@@ -87,31 +93,36 @@ public class HUDController : MonoBehaviour, IObserverable
     private void SetButtons()//Set methods button for choice difficulty
     {
         restartButton.onClick.AddListener(RestartGame);
-        easyButton.onClick.AddListener(Easy);
-        mediumButton.onClick.AddListener(Medium);
-        hardButton.onClick.AddListener(Hard);
+        easyButton.onClick.AddListener(() => Easy(() => StartGame(easyDifficult)));
+        mediumButton.onClick.AddListener(() => Medium(() => StartGame(mediumDifficult)));
+        hardButton.onClick.AddListener(() => Hard(() => StartGame(hardDifficult)));
         quitButton.onClick.AddListener(Quit);
     }
-    private void Easy()//Set easy game
+
+    private void Easy(TweenCallback method)//Set easy game
     {
-        gameSceneController.difficulty = 15f;
-        StartGame();
+        RectTransform transformButton = easyButton.GetComponent<RectTransform>();
+        transformButton.DOPunchScale(Vector3.one * 0.5f, 0.5f, 2, 0.25f).OnComplete(() => OnMenuAction(method));
     }
-    private void Medium()//Set medium game
+    private void Medium(TweenCallback method)//Set medium game
     {
-        gameSceneController.difficulty = 10f;
-        StartGame();
+        RectTransform transformButton = mediumButton.GetComponent<RectTransform>();
+        transformButton.DOPunchScale(Vector3.one * 0.5f, 0.5f, 2, 0.25f).OnComplete(() => OnMenuAction(method));
     }
-    private void Hard()//Set hard game
+    private void Hard(TweenCallback method)//Set hard game
     {
-        gameSceneController.difficulty = 7f;
-        StartGame();
+        RectTransform transformButton = hardButton.GetComponent<RectTransform>();
+        transformButton.DOPunchScale(Vector3.one * 0.5f, 0.5f, 2, 0.25f).OnComplete(() => OnMenuAction(method));
     }
-    private void StartGame()//Start main game
+    private void StartGame(float difficulty)//Start main game and set difficult
     {
-        startMenu.enabled = false;
-        mainGame.enabled = true;
-        gameSceneController.StartGame = true;
+        if (!gameSceneController.StartGame)
+        {
+            gameSceneController.difficulty = difficulty;
+            startMenu.enabled = false;
+            mainGame.enabled = true;
+            gameSceneController.StartGame = true;
+        }
     }
     private void Quit()//Exit game
     {

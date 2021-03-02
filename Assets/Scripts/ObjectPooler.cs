@@ -4,11 +4,9 @@ using UnityEngine;
 using System;
 
 
-public class ObjectPooler : MonoBehaviour
+public class ObjectPooler : Singleton<ObjectPooler>
 {
     #region Field Declarations
-
-    public static ObjectPooler SharedInstance;
 
     [Serializable]
     public class Pool
@@ -18,19 +16,15 @@ public class ObjectPooler : MonoBehaviour
     }
 
     [Header("Pool")]
-    [SerializeField] List<Pool> objectToPool;
+    [SerializeField] private List<Pool> objectToPool;
     [HideInInspector] public List<GameObject> pooledObjects = new List<GameObject>();
 
     #endregion
 
     #region Startup
-    void Awake()
-    {
-        SharedInstance = this;
-    }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         CreatePool();
     }

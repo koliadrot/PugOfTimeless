@@ -10,18 +10,18 @@ public class EnemyController : MonoBehaviour, IObserverable
     public event Action<float> DamageEffect = (float damageValue) => { };
 
     [Header("Spawn")]
-    [SerializeField] float xRange = 23f;
-    [SerializeField] float zRange = 23f;
+    [SerializeField] private float xRange = 23f;
+    [SerializeField] private float zRange = 23f;
 
     [Header("Movement")]
-    [SerializeField] float speed = 40f;
+    [SerializeField] private float speed = 40f;
 
     [Header("GamePlay")]
-    [SerializeField] [Range(0, 1)] float damageToPlayer = 0.1f;
+    [SerializeField] [Range(0, 1)] private float damageToPlayer = 0.1f;
 
     [Header("Audio")]
-    [SerializeField] AudioSource source;
-    [SerializeField] AudioClip collisionSound;
+    [SerializeField] private AudioSource source;
+    [SerializeField] private AudioClip collisionSound;
 
     #endregion
 

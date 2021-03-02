@@ -3,25 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class ManagerCommand : MonoBehaviour
+public class ManagerCommand : Singleton<ManagerCommand>
 {
     #region Field Declarations
-    
-    private static ManagerCommand _instance=null;
-    private static readonly object threadlock = new object();
-    public static ManagerCommand Instance
-    {
-        get
-        {
-            lock (threadlock)
-            {
-                if (_instance == null)
-                    _instance = new ManagerCommand();
-
-                return _instance;
-            }
-        }
-    }
 
     private List<List<ICommandable>> _commandBuffer = new List<List<ICommandable>>();
     private List<ICommandable> command;
@@ -32,10 +16,7 @@ public class ManagerCommand : MonoBehaviour
     #endregion
     
     #region Startup
-    private void Awake()
-    {
-        _instance = this;
-    }
+
     private void Start()
     {
         gameSceneController = GameSceneController.Instance;
@@ -98,7 +79,7 @@ public class ManagerCommand : MonoBehaviour
     private void SetEnemyList()//Record enemy command for "replay"
     {
         gameSceneController.ResetTransformAndPosition();
-        foreach (GameObject objectPooler in ObjectPooler.SharedInstance.pooledObjects)
+        foreach (GameObject objectPooler in ObjectPooler.Instance.pooledObjects)
         {
             gameSceneController.SetTransformAndPosition(objectPooler.transform, objectPooler.tag);
         }
