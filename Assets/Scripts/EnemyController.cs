@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour, IObserverable
     #region Field Declarations
 
     public event Action<float> DamageEffect = (float damageValue) => { };
+    private GameSceneController gameSceneController;
 
     [Header("Spawn")]
     [SerializeField] private float xRange = 23f;
@@ -25,8 +26,15 @@ public class EnemyController : MonoBehaviour, IObserverable
 
     #endregion
 
+    #region Startup
+    private void Start()
+    {
+        gameSceneController = GameSceneController.Instance;
+    }
+    #endregion
+
     #region Subject Implementation
-   
+
     #region GamePlay
     // Update is called once per frame
     private void Update()
@@ -38,7 +46,7 @@ public class EnemyController : MonoBehaviour, IObserverable
     #region Movement
     void ForwardMove()//Moving enemy, when player don't activity "replay"
     {
-        if (!GameSceneController.Instance.replayOn)
+        if (!gameSceneController.ReplayOn)
         {
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
@@ -55,7 +63,7 @@ public class EnemyController : MonoBehaviour, IObserverable
     #region Collosions
     private void OnTriggerEnter(Collider other)//Activate on trigger enter
     {
-        if (!GameSceneController.Instance.replayOn)
+        if (!gameSceneController.ReplayOn)
         {
             if (other.gameObject.CompareTag("Wall"))//Respawning enemy without disable on start line
             {

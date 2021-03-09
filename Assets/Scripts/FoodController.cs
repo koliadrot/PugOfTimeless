@@ -7,27 +7,14 @@ public class FoodController : MonoBehaviour, IObserverable
 {
     #region Field Declarations
 
-    public event Action<int, Transform, Vector3, AudioSource, AudioClip> FoodEated = (int pointValue, Transform food, Vector3 position, AudioSource sourceAudio, AudioClip clip) => { };
+    public event Action<int, AudioSource, AudioClip> FoodEated = (int pointValue, AudioSource sourceAudio, AudioClip clip) => { };
 
     [Header("GamePlay")]
     [SerializeField] private int pointValue = 1;
 
     [Header("Audio")]
-    [HideInInspector] public AudioSource source;
     [SerializeField] private AudioClip eatClip;
-    
-
-    #endregion
-
-    #region Startup
-    private void OnEnable()
-    {
-        if (!Input.GetKey(GameSceneController.Instance.replayKey))//Set last position food
-        {
-            GameSceneController.Instance.lastFood = gameObject.transform;
-            GameSceneController.Instance.lastPositionFood = transform.position;
-        }
-    }
+    public AudioSource Source { get; set; }
 
     #endregion
 
@@ -46,11 +33,11 @@ public class FoodController : MonoBehaviour, IObserverable
     #region Collisons
     private void OnTriggerEnter(Collider other)//Activate on trigger enter
     {
-        if (!GameSceneController.Instance.replayOn)
+        if (!GameSceneController.Instance.ReplayOn)
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                FoodEated(pointValue, transform, transform.position, source, eatClip);//Get point, set last position food, activate sound effect
+                FoodEated(pointValue, Source, eatClip);//Get point, activate sound effect
                 Death();
             }
         }

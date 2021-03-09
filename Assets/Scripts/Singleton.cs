@@ -16,7 +16,9 @@ public class Singleton<T> : MonoBehaviour where T : Singleton<T>
             }
         }
     }
+    #endregion
 
+    #region Startup
     protected virtual void Awake()
     {
         if (_instance == null)
