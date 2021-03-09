@@ -49,9 +49,10 @@ public class GameSceneController : Singleton<GameSceneController>
     [Header("Record Targets")]
     public Transform playerTransform;//It need manual fill field for observe object on per frame
     public Animator playerAnimator;
-    private Transform foodTransform;//...
     private List<Vector3> enemiesPosition = new List<Vector3>();//It auto fill field after spawn object for observe object on per frame
     private List<Transform> enemiesTransform = new List<Transform>();//...
+    private Transform foodTransform;//...
+    public Transform FoodTransform { get => foodTransform; }
 
     [Header("Audio")]
     [SerializeField] private AudioSource sourceAuxiliary;

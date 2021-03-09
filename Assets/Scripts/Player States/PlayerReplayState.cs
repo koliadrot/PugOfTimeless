@@ -16,6 +16,6 @@ public class PlayerReplayState : PlayerBaseState
 
     public override void LogicUpdate(PlayerController player)//Update methods on current player state
     {
-        
+        player.Navigation();
     }
 }

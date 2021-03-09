@@ -20,5 +20,6 @@ public class PlayerIdleState : PlayerBaseState
     {
         player.RecordReplay();
         player.HungryCountDown();
+        player.Navigation();
     }
 }

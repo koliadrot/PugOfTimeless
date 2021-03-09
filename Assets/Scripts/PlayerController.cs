@@ -8,8 +8,10 @@ public class PlayerController : MonoBehaviour, IObserverable
 
     [Header("Player Parameters")]
     [SerializeField] private Transform targetPlayer;
-    [SerializeField] private float speedMovement;
-    [SerializeField] private float speedRotation;
+    [SerializeField] private Transform navigationArrow;
+    [SerializeField] private float speedMovement = 10f;
+    [SerializeField] private float speedRotation = 100f;
+    [SerializeField] private float smoothlyNavigation = 8f;
     [SerializeField] private AccelerationType accelerationType = AccelerationType.Fast;
     [SerializeField] private KeyCode accelerationKey = KeyCode.LeftShift;
     [SerializeField] private Animator animator;
@@ -25,10 +27,8 @@ public class PlayerController : MonoBehaviour, IObserverable
                 accelerationSpeed = value;
         }
     }
-    private float test;
     public float Horizontal { get; set; }
     public float Vertical { get; set; }
-    public float Test { get => test; set => test = value; }
 
     [System.Serializable]
     private class Bounds
@@ -94,6 +94,12 @@ public class PlayerController : MonoBehaviour, IObserverable
     public void HungryCountDown()//Countdown player lives
     {
         gameSceneController.HungryCountDown();
+    }
+    public void Navigation()//Help player with navigation searching pizza
+    {
+
+        //navigationArrow.LookAt(gameSceneController.FoodTransform);//Navigation without smoothly movement
+        navigationArrow.rotation = Quaternion.Slerp(navigationArrow.rotation, Quaternion.LookRotation(gameSceneController.FoodTransform.position - navigationArrow.position), Time.deltaTime * smoothlyNavigation);
     }
     #endregion
 

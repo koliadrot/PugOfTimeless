@@ -411,7 +411,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 421751445}
-  m_LocalRotation: {x: 0.3006394, y: -0.000000016410379, z: 0.0000000051729154, w: 0.9537379}
+  m_LocalRotation: {x: 0.3006394, y: 0.000000016410379, z: -0.0000000051729154, w: 0.9537379}
   m_LocalPosition: {x: 0, y: 7, z: -8}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -567,16 +567,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 4635751349007788863, guid: 8284c25a2bcb1904b8b9ef80972aa95e,
-        type: 3}
-      propertyPath: speedMovement
-      value: 10
-      objectReference: {fileID: 0}
-    - target: {fileID: 4635751349007788863, guid: 8284c25a2bcb1904b8b9ef80972aa95e,
-        type: 3}
-      propertyPath: speedRotation
-      value: 100
-      objectReference: {fileID: 0}
     - target: {fileID: 5865358500118014315, guid: 8284c25a2bcb1904b8b9ef80972aa95e,
         type: 3}
       propertyPath: m_Name
@@ -918,8 +908,6 @@ MonoBehaviour:
   mainCamera: {fileID: 421751450}
   timeReplay: 4
   replayKey: 114
-  replayOn: 0
-  difficulty: 10
   pools:
   - tag: Enemy
     pool:

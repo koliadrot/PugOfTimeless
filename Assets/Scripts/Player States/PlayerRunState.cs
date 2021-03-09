@@ -23,5 +23,6 @@ public class PlayerRunState : PlayerBaseState
         player.Acceleration();
         player.RecordReplay();
         player.HungryCountDown();
+        player.Navigation();
     }
 }
