@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using DG.Tweening;
 using System;
 
@@ -34,12 +35,14 @@ public class UISlide : UIEffect
     #region Methods UI effects
     public void InSlide()//Method description function, when game start and subscribe other methods of action
     {
-        targetTransform.DOAnchorPos(Vector2.zero, duration).SetEase(Ease.OutBack).OnComplete(() => OnSubscribeAction(OutSlide));
+        targetTransform.DOAnchorPos(Vector2.zero, duration).SetEase(Ease.OutBack).OnComplete(() => 
+        {
+            OnSubscribeAction(OutSlide);
+        });
     }
     public void OutSlide(TweenCallback method)//Method description function, which calls when player interaction with UI elements
     {
         targetTransform.DOAnchorPos(startTargetPosition, duration).SetEase(Ease.InBack).OnComplete(method);
-
     }
     #endregion
 }

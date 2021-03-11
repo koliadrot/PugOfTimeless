@@ -19,10 +19,16 @@ public class PlayerRunState : PlayerBaseState
     {
         player.Move();
         player.SpeedAnimation(player.Horizontal, player.Vertical);
-        player.BoundsMap();
         player.Acceleration();
         player.RecordReplay();
         player.HungryCountDown();
         player.Navigation();
+    }
+    public override void OnTriggerEnter(PlayerController player, Collider collider)
+    {
+        if (collider.CompareTag("Wall"))
+        {
+            player.ResetPlayerTransform();
+        }
     }
 }

@@ -7,14 +7,10 @@ public class FoodController : MonoBehaviour, IObserverable
 {
     #region Field Declarations
 
-    public event Action<int, AudioSource, AudioClip> FoodEated = (int pointValue, AudioSource sourceAudio, AudioClip clip) => { };
+    public event Action<int> FoodEated = (int pointValue) => { };
 
     [Header("GamePlay")]
     [SerializeField] private int pointValue = 1;
-
-    [Header("Audio")]
-    [SerializeField] private AudioClip eatClip;
-    public AudioSource Source { get; set; }
 
     #endregion
 
@@ -37,7 +33,7 @@ public class FoodController : MonoBehaviour, IObserverable
         {
             if (other.gameObject.CompareTag("Player"))
             {
-                FoodEated(pointValue, Source, eatClip);//Get point, activate sound effect
+                FoodEated(pointValue);//Get point, activate sound effect
                 Death();
             }
         }

@@ -17,10 +17,6 @@ public class RailWay : MonoBehaviour
     [Header("Animation")]
     [SerializeField] private Animator targetAnimator;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSource source;
-    [SerializeField] private AudioClip clipEated;
-
     #endregion
 
     #region Startup
@@ -42,7 +38,6 @@ public class RailWay : MonoBehaviour
             foreach (Transform point in pointsDestination)
             {
                 pizza.position = point.position;//Change positon pizza
-                source.PlayOneShot(clipEated);//Playing eat sound
                 targetAnimator.SetFloat("Speed_f", 0.7f);//Speed rotation animation
 
                 Quaternion newRotation = Quaternion.LookRotation(point.position - target.position);//Set angle rotate between target and destination points

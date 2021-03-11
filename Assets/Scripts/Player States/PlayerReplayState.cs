@@ -18,4 +18,8 @@ public class PlayerReplayState : PlayerBaseState
     {
         player.Navigation();
     }
+    public override void OnTriggerEnter(PlayerController player, Collider collider)
+    {
+
+    }
 }

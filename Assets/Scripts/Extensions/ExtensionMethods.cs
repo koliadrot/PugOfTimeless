@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
+using DG.Tweening;
 
 public static class ExtensionMethods
 {
@@ -21,7 +24,7 @@ public static class ExtensionMethods
         transform.rotation = Quaternion.identity;
         transform.localScale = Vector3.one;
     }
-    public static void ResetTransformation(this Transform transform, Vector3 NewPositon,Quaternion NewRotation)
+    public static void ResetTransformation(this Transform transform, Vector3 NewPositon, Quaternion NewRotation)
     {
         transform.position = NewPositon;
         transform.rotation = NewRotation;
@@ -77,6 +80,19 @@ public static class ExtensionMethods
             list[j] = list[i];
             list[i] = tmp;
         }
+    }
+    #endregion
+
+    #region Button
+    /// <summary>
+    /// "Punch" animation where in end animation start action
+    /// </summary>
+    /// <param name="button"></param>
+    /// <param name="action"></param>
+    public static void DOPunch(this Button button, Action action = null)
+    {
+        RectTransform transformButton = button.GetComponent<RectTransform>();
+        transformButton.DOPunchScale(Vector3.one * 0.5f, 0.5f, 2, 0.25f).OnComplete(() => action?.Invoke());
     }
     #endregion
 }

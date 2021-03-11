@@ -8,33 +8,35 @@ using Cinemachine;
 public class GameSceneController : Singleton<GameSceneController>
 {
     #region Field Declarations
-
     public event Action<int> ScoreUpdateOnEat = (int score) => { };
     public event Action<float> LifeControl = (float life) => { };
     public event Action<float> ReplayTimeControl = (float time) => { };
+    public event Action<bool> FoodControl = (bool foodStatus) => { };
     public event Action<bool> ReplayControl = (bool replayStatus) => { };
     public event Action<bool> DamageControl = (bool damageStatus) => { };
 
-    [Header("Food Spawn")]
-    [SerializeField] private float xFoodRange = 23f;
-    [SerializeField] private float zFoodRange = 23f;
+    [Header("Environment")]
+    [SerializeField] private Transform ground;
+    public float GroundX => Mathf.Pow(ground.localScale.x, 2f) * 0.9f;
+    public float GroundZ => Mathf.Pow(ground.localScale.z, 2f) * 0.9f;
+
+    [Header("Food")]
     [SerializeField] private string foodTag = "Food";
     [SerializeField] private float foodHealth = 0.25f;
     private bool food;
 
-    [Header("Enemy Spawn")]
-    [SerializeField] private float xEnemyRange = 23f;
-    [SerializeField] private float zEnemyRange = 23f;
-    [SerializeField] private float startEnemyDelay = 2;
+    [Header("Enemy")]
+    [SerializeField] private float startDelayRespawn = 2;
     [SerializeField] private float delayRespawn = 1.5f;
     [SerializeField] private string enemyTag = "Enemy";
 
-    [Header("GamePlay")]
+    [Header("Player")]
     [SerializeField] private CinemachineVirtualCamera mainCamera;
     [SerializeField] private float timeReplay = 4;
     public KeyCode replayKey = KeyCode.R;
     public bool ReplayOn { get; set; }
     public float Difficulty { get; set; }
+    public CinemachineBasicMultiChannelPerlin MainCamera => mainCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     private List<IObserverable> endGameObservers = new List<IObserverable>();
     private List<List<ICommandable>> commandBuffer = new List<List<ICommandable>>();
     private List<ICommandable> command = new List<ICommandable>();
@@ -47,16 +49,12 @@ public class GameSceneController : Singleton<GameSceneController>
     [SerializeField] private Dictionary<string, List<GameObject>> pooledObjects = new Dictionary<string, List<GameObject>>();
 
     [Header("Record Targets")]
-    public Transform playerTransform;//It need manual fill field for observe object on per frame
-    public Animator playerAnimator;
-    private List<Vector3> enemiesPosition = new List<Vector3>();//It auto fill field after spawn object for observe object on per frame
-    private List<Transform> enemiesTransform = new List<Transform>();//...
-    private Transform foodTransform;//...
-    public Transform FoodTransform { get => foodTransform; }
-
-    [Header("Audio")]
-    [SerializeField] private AudioSource sourceAuxiliary;
-    [SerializeField] private AudioSource sourceMainTheme;
+    public Transform playerTransform;//--->It need manual fill field for observe object on per frame
+    public Animator playerAnimator;//<---
+    private List<Vector3> enemiesPosition = new List<Vector3>();//--->It auto fill field after spawn object for observe object on per frame
+    private List<Transform> enemiesTransform = new List<Transform>();//<---
+    private Transform foodTransform;//It auto fill field after spawn object for observe object on per frame
+    public Transform FoodTransform => foodTransform;
 
     public int TotalPoints //Update full total poits and Health Bar
     {
@@ -94,7 +92,6 @@ public class GameSceneController : Singleton<GameSceneController>
             public int size;
         }
     }
-
     #endregion
 
     #region Startup
@@ -102,7 +99,6 @@ public class GameSceneController : Singleton<GameSceneController>
     {
         base.Awake();
         DamageControl += CameraNoiseEffect;
-        ReplayControl += TimeSound;
     }
     private void Start()
     {
@@ -111,7 +107,6 @@ public class GameSceneController : Singleton<GameSceneController>
         StartCoroutine(SpawnRandomEnemy());
         valueFrameTime = 60 * timeReplay;//Set max list size for record replay. 1 second = 60 frame.
     }
-
     #endregion
 
     #region Subject Implementation
@@ -173,7 +168,7 @@ public class GameSceneController : Singleton<GameSceneController>
     }
     #endregion
 
-    #region Player Life
+    #region Player
 
     public void HungryCountDown()//Countdown player health per seconds
     {
@@ -196,7 +191,6 @@ public class GameSceneController : Singleton<GameSceneController>
             ReplayWindow_OnAction(false);
             Damage_OnAction(false);
             NotifyObservers();
-            sourceMainTheme.Stop();
         }
     }
     public void CollisionPlayer(float damage)//Damage of player when collision with enemy
@@ -215,26 +209,23 @@ public class GameSceneController : Singleton<GameSceneController>
     {
         if (statusNoise)
         {
-            mainCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 2f;
-            mainCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 6f;
+            MainCamera.m_AmplitudeGain = 2f;
+            MainCamera.m_FrequencyGain = 6f;
         }
         else
         {
-            mainCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_AmplitudeGain = 1f;
-            mainCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 1f;
+            MainCamera.m_AmplitudeGain = 1f;
+            MainCamera.m_FrequencyGain = 1f;
         }
     }
     #endregion
 
     #region Food
-    private void PizzaEated(int pointValue, AudioSource source, AudioClip clip)//Add point when player eat food
+    private void PizzaEated(int pointValue)//Add point when player eat food
     {
+        FoodControl(true);
         TotalPoints += pointValue;
         food = true;
-    }
-    private void PizzaSound(int pointValue, AudioSource source, AudioClip clip)// Sound effect when player eat food
-    {
-        source.PlayOneShot(clip);
     }
     #endregion
 
@@ -256,29 +247,12 @@ public class GameSceneController : Singleton<GameSceneController>
 
     #endregion
 
-    #region Audio
-    private void TimeSound(bool sound)//Sound effect when activate replay
-    {
-        if (sound)
-        {
-            sourceAuxiliary.Play();
-            sourceMainTheme.Pause();
-        }
-        else
-        {
-            sourceAuxiliary.Stop();
-            sourceMainTheme.Play();
-        }
-
-    }
-    #endregion
-
     #region Spawn Objects
     private IEnumerator SpawnRandomFood()//Routine spawn food in random position
     {
         while (true)
         {
-            Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-xFoodRange, xFoodRange), 0f, UnityEngine.Random.Range(-zFoodRange, zFoodRange));
+            Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-GroundX, GroundX), 0f, UnityEngine.Random.Range(-GroundZ, GroundZ));
             PooledSpawnObject(spawnPosition, foodTag);
             food = false;
             yield return new WaitUntil(() => food);
@@ -287,11 +261,11 @@ public class GameSceneController : Singleton<GameSceneController>
 
     private IEnumerator SpawnRandomEnemy()//Routine spawn enemy in random position
     {
-        yield return new WaitForSeconds(startEnemyDelay);
+        yield return new WaitForSeconds(startDelayRespawn);
         while (true)
         {
             yield return new WaitWhile(() => ReplayOn);
-            Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-xEnemyRange, xEnemyRange), 0, zEnemyRange);
+            Vector3 spawnPosition = new Vector3(UnityEngine.Random.Range(-GroundX, GroundX), 0f, GroundZ);
             PooledSpawnObject(spawnPosition, enemyTag);
             yield return new WaitForSeconds(delayRespawn);
         }
@@ -310,8 +284,7 @@ public class GameSceneController : Singleton<GameSceneController>
             {
                 FoodController foodObject = pooledObject.GetComponent<FoodController>();//Set necessary property and events
                 foodObject.FoodEated += PizzaEated;
-                foodObject.FoodEated += PizzaSound;
-                foodObject.Source = sourceAuxiliary;
+                //foodObject.Source = sourceAuxiliary;
                 AddObserver(foodObject);//Subscribe on observer
                 foodTransform = pooledObject.transform;
             }
@@ -319,7 +292,6 @@ public class GameSceneController : Singleton<GameSceneController>
             {
                 EnemyController enemyObject = pooledObject.GetComponent<EnemyController>();
                 enemyObject.DamageEffect += CollisionPlayer;
-                enemyObject.DamageEffect += enemyObject.SoundDamage;
                 AddObserver(enemyObject);//Subscribe on observer
             }
 
@@ -420,5 +392,4 @@ public class GameSceneController : Singleton<GameSceneController>
     #endregion
 
     #endregion
-
 }

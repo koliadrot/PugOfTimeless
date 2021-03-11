@@ -20,10 +20,6 @@ public class EnemyController : MonoBehaviour, IObserverable
     [Header("GamePlay")]
     [SerializeField] [Range(0, 1)] private float damageToPlayer = 0.1f;
 
-    [Header("Audio")]
-    [SerializeField] private AudioSource source;
-    [SerializeField] private AudioClip collisionSound;
-
     #endregion
 
     #region Startup
@@ -50,13 +46,6 @@ public class EnemyController : MonoBehaviour, IObserverable
         {
             transform.Translate(Vector3.forward * speed * Time.deltaTime);
         }
-    }
-    #endregion
-   
-    #region Audio
-    public void SoundDamage(float nonValue)//Sound effect, when player collision with player
-    {
-        source.PlayOneShot(collisionSound);
     }
     #endregion
 

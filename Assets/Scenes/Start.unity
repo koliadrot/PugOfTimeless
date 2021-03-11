@@ -6527,6 +6527,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1538785013}
   - component: {fileID: 1538785012}
+  - component: {fileID: 1538785014}
   m_Layer: 0
   m_Name: UI Controller
   m_TagString: Untagged
@@ -6546,27 +6547,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 05d53d55293a04c1caaf712d53d0a468, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startScene:
-    currentDifficult: 0
-    easyButton: {fileID: 0}
-    easyDifficult: 15
-    mediumButton: {fileID: 0}
-    mediumDifficult: 10
-    hardButton: {fileID: 0}
-    hardDifficult: 7
-    quitButton: {fileID: 0}
-  gameScene:
-    statusGame: {fileID: 0}
-    restartButton: {fileID: 0}
-    speedRotation: 5
-    scoreText: {fileID: 0}
-    healthBar: {fileID: 0}
-    replayTimeBar: {fileID: 0}
-    replayImage: {fileID: 0}
-    damageImage: {fileID: 0}
   canvasPrefabs:
   - {fileID: 9004620810901873313, guid: 8a3a006df8618ee4c8d1b4f0ed4cf39c, type: 3}
   - {fileID: 9004620810901873313, guid: 215fbdc2ca30cd94391187a1613d6349, type: 3}
+  audioSource: {fileID: 1538785014}
+  mainThemeStartClip: {fileID: 8300000, guid: eb11d7785de346145a4bddf009ac1ea4, type: 3}
+  mainThemeGameClip: {fileID: 8300000, guid: fcff85b0ed1e9f04a837dcba527cebf7, type: 3}
+  eatFoodClip: {fileID: 8300000, guid: ac0e93f8dd0ac28419a2a4b12ff56e7d, type: 3}
+  damageClip: {fileID: 8300000, guid: 43665b3b09839c546905bb907d01181c, type: 3}
+  replayTimeClip: {fileID: 8300000, guid: a2c8139f321a7ae40babbaabcb42cca5, type: 3}
 --- !u!4 &1538785013
 Transform:
   m_ObjectHideFlags: 0
@@ -6581,83 +6570,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1835291881
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1835291882}
-  m_Layer: 0
-  m_Name: GameObject (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1835291882
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1835291881}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10.55, y: 0, z: -8.59}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 2015453918}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &2015453914
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2015453918}
-  - component: {fileID: 2015453915}
-  - component: {fileID: 2015453916}
-  m_Layer: 0
-  m_Name: Rail Way
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &2015453915
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015453914}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 119cfe3870b59ec4e908324efb7e66bf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 868636096}
-  pizza: {fileID: 561132308008403281}
-  targetAnimator: {fileID: 860893874}
-  source: {fileID: 2015453916}
-  clipEated: {fileID: 8300000, guid: ac0e93f8dd0ac28419a2a4b12ff56e7d, type: 3}
---- !u!82 &2015453916
+--- !u!82 &1538785014
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2015453914}
+  m_GameObject: {fileID: 1538785011}
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: eb11d7785de346145a4bddf009ac1ea4, type: 3}
-  m_PlayOnAwake: 1
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 1
@@ -6742,6 +6666,68 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &1835291881
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1835291882}
+  m_Layer: 0
+  m_Name: GameObject (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1835291882
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1835291881}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -10.55, y: 0, z: -8.59}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 2015453918}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2015453914
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2015453918}
+  - component: {fileID: 2015453915}
+  m_Layer: 0
+  m_Name: Rail Way
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &2015453915
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2015453914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 119cfe3870b59ec4e908324efb7e66bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 868636096}
+  pizza: {fileID: 561132308008403281}
+  targetAnimator: {fileID: 860893874}
 --- !u!4 &2015453918
 Transform:
   m_ObjectHideFlags: 0

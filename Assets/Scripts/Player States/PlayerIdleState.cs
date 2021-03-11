@@ -22,4 +22,12 @@ public class PlayerIdleState : PlayerBaseState
         player.HungryCountDown();
         player.Navigation();
     }
+
+    public override void OnTriggerEnter(PlayerController player, Collider collider)
+    {
+        if (collider.CompareTag("Wall"))
+        {
+            player.ResetPlayerTransform();
+        }
+    }
 }

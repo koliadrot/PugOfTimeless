@@ -15,8 +15,7 @@ public class PlayerController : MonoBehaviour, IObserverable
     [SerializeField] private AccelerationType accelerationType = AccelerationType.Fast;
     [SerializeField] private KeyCode accelerationKey = KeyCode.LeftShift;
     [SerializeField] private Animator animator;
-    [SerializeField] private float defaultScale = 10f;
-    [SerializeField] private Bounds bounds = new Bounds();
+    [SerializeField] private float defaultPlayerScale = 10f;
     private float accelerationSpeed = 0f;
     public float AccelerationSpeed
     {
@@ -27,23 +26,14 @@ public class PlayerController : MonoBehaviour, IObserverable
                 accelerationSpeed = value;
         }
     }
-    public float Horizontal { get; set; }
-    public float Vertical { get; set; }
-
-    [System.Serializable]
-    private class Bounds
-    {
-        public float leftBound = -25f;
-        public float rightBound = 25f;
-        public float upBound = 25f;
-        public float downBound = -25f;
-    }
     private enum AccelerationType
     {
         Slow,
         Medium,
         Fast,
     }
+    public float Horizontal { get; set; }
+    public float Vertical { get; set; }
 
     private List<ICommandable> command;
     private GameSceneController gameSceneController;
@@ -54,8 +44,6 @@ public class PlayerController : MonoBehaviour, IObserverable
     public readonly PlayerRunState RunState = new PlayerRunState();
     public readonly PlayerReplayState ReplayState = new PlayerReplayState();
     public readonly PlayerGameOverState GameOverState = new PlayerGameOverState();
-
-
     #endregion
 
     #region Statup
@@ -86,18 +74,12 @@ public class PlayerController : MonoBehaviour, IObserverable
         SpeedAnimation(0f, 0f);
         animator.SetBool("Sit_b", true);
     }
-    public void BoundsMap()//Set bounds for player, when he cross it reset position
-    {
-        if (targetPlayer.transform.position.z > bounds.upBound || targetPlayer.transform.position.z < bounds.downBound || targetPlayer.transform.position.x > bounds.rightBound || targetPlayer.transform.position.x < bounds.leftBound)
-            targetPlayer.ResetTransformation(defaultScale);
-    }
     public void HungryCountDown()//Countdown player lives
     {
         gameSceneController.HungryCountDown();
     }
     public void Navigation()//Help player with navigation searching pizza
     {
-
         //navigationArrow.LookAt(gameSceneController.FoodTransform);//Navigation without smoothly movement
         navigationArrow.rotation = Quaternion.Slerp(navigationArrow.rotation, Quaternion.LookRotation(gameSceneController.FoodTransform.position - navigationArrow.position), Time.deltaTime * smoothlyNavigation);
     }
@@ -110,7 +92,6 @@ public class PlayerController : MonoBehaviour, IObserverable
         Vertical = Input.GetAxis("Vertical");
         targetPlayer.Rotate(Vector3.up * Horizontal * speedRotation * Time.deltaTime);
         targetPlayer.Translate(Vector3.forward * Vertical * (speedMovement + AccelerationSpeed) * Time.deltaTime);
-
     }
     public void SpeedAnimation(float Horizontal, float Vertical)//Change animation speed on dependency movement player
     {
@@ -200,6 +181,17 @@ public class PlayerController : MonoBehaviour, IObserverable
         }
     }
 
+    #endregion
+
+    #region OnTrigger
+    private void OnTriggerEnter(Collider other)
+    {
+        currentState.OnTriggerEnter(this, other);
+    }
+    public void ResetPlayerTransform()//Reset transform player position
+    {
+        targetPlayer.ResetTransformation(defaultPlayerScale);
+    }
     #endregion
 
     #region Observer Action
